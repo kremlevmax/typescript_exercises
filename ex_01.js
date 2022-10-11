@@ -14,4 +14,3 @@ let office = {
         address: { city: "Seattle" },
     },
 };
-console.log(2 /* StatusCodes.FAILED */);
