@@ -15,8 +15,8 @@ let office: {
   officeId: 45,
   isOpened: false,
   contacts: {
-    phone: "+791000000",
     email: "my@gmail.com",
     address: { city: "Seattle" },
+    phone: "+791000000",
   },
 };
