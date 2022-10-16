@@ -1,9 +1,8 @@
 "use strict";
 class User {
-    constructor(name) {
-        if (typeof name === "string") {
-            this.name = name;
-        }
+    constructor(name, age) {
+        this.name = name;
+        this.age = age;
     }
 }
 const user = new User("John");
