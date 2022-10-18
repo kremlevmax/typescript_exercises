@@ -1,8 +1,12 @@
 type directionType = "asc" | "dsc";
 
-const genericsSort = function <T>(
-  data: { id: number; [key: number]: T }[],
-  direction: directionType
+interface DataType {
+  id: number;
+}
+
+const genericsSort = function <T extends DataType>(
+  data: T[],
+  direction: directionType = "asc"
 ) {
   if (direction === "asc") {
     return data.sort((a, b) => (a.id > b.id ? 1 : -1));
@@ -17,5 +21,5 @@ const data = [
   { id: 2, status: false },
 ];
 
-console.log(genericsSort(data, "asc"));
+console.log(genericsSort(data));
 console.log(genericsSort(data, "dsc"));
