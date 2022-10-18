@@ -21,21 +21,45 @@ export const persons: Person[] = [
     age: 25,
     occupation: "Chimney sweep",
   },
-  { type: "admin", name: "Jane Doe", age: 32, role: "Administrator" },
-  { type: "user", name: "Kate Müller", age: 23, occupation: "Astronaut" },
-  { type: "admin", name: "Bruce Willis", age: 64, role: "World saver" },
+  {
+    type: "admin",
+    name: "Jane Doe",
+    age: 32,
+    role: "Administrator",
+  },
+  {
+    type: "user",
+    name: "Kate Müller",
+    age: 23,
+    occupation: "Astronaut",
+  },
+  {
+    type: "admin",
+    name: "Bruce Willis",
+    age: 64,
+    role: "World saver",
+  },
+  {
+    type: "user",
+    name: "Wilson",
+    age: 23,
+    occupation: "Ball",
+  },
+  {
+    type: "admin",
+    name: "Agent Smith",
+    age: 23,
+    role: "Administrator",
+  },
 ];
 
-export function isAdmin(person: Person): person is Admin {
-  return person.type === "admin";
-}
-
-export function isUser(person: Person): person is User {
-  return person.type === "user";
-}
+export const isAdmin = (person: Person): person is Admin =>
+  person.type === "admin";
+export const isUser = (person: Person): person is User =>
+  person.type === "user";
 
 export function logPerson(person: Person) {
-  let additionalInformation: string = "";
+  let additionalInformation = "";
   if (isAdmin(person)) {
     additionalInformation = person.role;
   }
@@ -45,7 +69,20 @@ export function logPerson(person: Person) {
   console.log(` - ${person.name}, ${person.age}, ${additionalInformation}`);
 }
 
-console.log("Admins:");
-persons.filter(isAdmin).forEach(logPerson);
+export function filterUsers<T>(
+  persons: Person[],
+  criteria: Partial<User>
+): User[] {
+  return persons.filter(isUser).filter((user) => {
+    const criteriaKeys = Object.keys(criteria) as (keyof User)[];
+    return criteriaKeys.every((fieldName) => {
+      return user[fieldName] === criteria[fieldName];
+    });
+  });
+}
 
-console.log();
+console.log("Users of age 23:");
+
+filterUsers(persons, {
+  age: 23,
+}).forEach(logPerson);
