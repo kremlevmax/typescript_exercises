@@ -12,83 +12,56 @@ interface Admin {
   role: string;
 }
 
-function logUser(user: User) {
-  const pos = users.indexOf(user) + 1;
-  console.log(` - #${pos} User: ${user.name}, ${user.age}, ${user.occupation}`);
-}
+export type Person = User | Admin;
 
-function logAdmin(admin: Admin) {
-  const pos = admins.indexOf(admin) + 1;
-  console.log(` - #${pos} Admin: ${admin.name}, ${admin.age}, ${admin.role}`);
-}
-
-const admins: Admin[] = [
-  {
-    type: "admin",
-    name: "Will Bruces",
-    age: 30,
-    role: "Overseer",
-  },
-  {
-    type: "admin",
-    name: "Steve",
-    age: 40,
-    role: "Steve",
-  },
-];
-
-const users: User[] = [
+export const persons: Person[] = [
   {
     type: "user",
-    name: "Moses",
-    age: 70,
-    occupation: "Desert guide",
+    name: "Max Mustermann",
+    age: 25,
+    occupation: "Chimney sweep",
   },
-  {
-    type: "user",
-    name: "Superman",
-    age: 28,
-    occupation: "Ordinary person",
-  },
+  { type: "admin", name: "Jane Doe", age: 32, role: "Administrator" },
+  { type: "user", name: "Kate Müller", age: 23, occupation: "Astronaut" },
+  { type: "admin", name: "Bruce Willis", age: 64, role: "World saver" },
+  { type: "user", name: "Wilson", age: 23, occupation: "Ball" },
+  { type: "admin", name: "Agent Smith", age: 23, role: "Anti-virus engineer" },
 ];
 
-export function swap<T1, T2>(v1: T1, v2: T2): [T2, T1] {
-  return [v2, v1];
+export function logPerson(person: Person) {
+  console.log(
+    ` - ${person.name}, ${person.age}, ${
+      person.type === "admin" ? person.role : person.occupation
+    }`
+  );
 }
 
-function test1() {
-  console.log("test1:");
-  const [secondUser, firstAdmin] = swap<Admin, User>(admins[0], users[1]);
-  logUser(secondUser);
-  logAdmin(firstAdmin);
+export function filterPersons(
+  persons: Person[],
+  personType: string,
+  criteria: Partial<Omit<User, "type">> | Partial<Omit<Admin, "type">>
+): Person[] {
+  return persons
+    .filter((person) => person.type === personType)
+    .filter((person) => {
+      let criteriaKeys = Object.keys(criteria) as (keyof Person)[];
+      return criteriaKeys.every((fieldName) => {
+        return person[fieldName] === criteria[fieldName];
+      });
+    });
 }
 
-function test2() {
-  console.log("test2:");
-  const [secondAdmin, firstUser] = swap<User, Admin>(users[0], admins[1]);
-  logAdmin(secondAdmin);
-  logUser(firstUser);
-}
+export const usersOfAge23 = filterPersons(persons, "user", {
+  role: "Anti-virus engineer",
+});
+export const adminsOfAge23 = filterPersons(persons, "admin", {
+  role: "Anti-virus engineer",
+});
 
-function test3() {
-  console.log("test3:");
-  const [secondUser, firstUser] = swap<User, User>(users[0], users[1]);
-  logUser(secondUser);
-  logUser(firstUser);
-}
+console.log("Users of age 23:");
+usersOfAge23.forEach(logPerson);
 
-function test4() {
-  console.log("test4:");
-  const [firstAdmin, secondAdmin] = swap<Admin, Admin>(admins[1], admins[0]);
-  logAdmin(firstAdmin);
-  logAdmin(secondAdmin);
-}
+console.log();
 
-function test5() {
-  console.log("test5:");
-  const [stringValue, numericValue] = swap<number, string>(123, "Hello World");
-  console.log(` - String: ${stringValue}`);
-  console.log(` - Numeric: ${numericValue}`);
-}
-
-[test1, test2, test3, test4, test5].forEach((test) => test());
+console.log("Admins of age 23:");
+adminsOfAge23.forEach(logPerson);

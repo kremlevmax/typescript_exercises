@@ -1,74 +1,42 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.swap = void 0;
-function logUser(user) {
-    const pos = users.indexOf(user) + 1;
-    console.log(` - #${pos} User: ${user.name}, ${user.age}, ${user.occupation}`);
-}
-function logAdmin(admin) {
-    const pos = admins.indexOf(admin) + 1;
-    console.log(` - #${pos} Admin: ${admin.name}, ${admin.age}, ${admin.role}`);
-}
-const admins = [
-    {
-        type: "admin",
-        name: "Will Bruces",
-        age: 30,
-        role: "Overseer",
-    },
-    {
-        type: "admin",
-        name: "Steve",
-        age: 40,
-        role: "Steve",
-    },
-];
-const users = [
+exports.adminsOfAge23 = exports.usersOfAge23 = exports.filterPersons = exports.logPerson = exports.persons = void 0;
+exports.persons = [
     {
         type: "user",
-        name: "Moses",
-        age: 70,
-        occupation: "Desert guide",
+        name: "Max Mustermann",
+        age: 25,
+        occupation: "Chimney sweep",
     },
-    {
-        type: "user",
-        name: "Superman",
-        age: 28,
-        occupation: "Ordinary person",
-    },
+    { type: "admin", name: "Jane Doe", age: 32, role: "Administrator" },
+    { type: "user", name: "Kate Müller", age: 23, occupation: "Astronaut" },
+    { type: "admin", name: "Bruce Willis", age: 64, role: "World saver" },
+    { type: "user", name: "Wilson", age: 23, occupation: "Ball" },
+    { type: "admin", name: "Agent Smith", age: 23, role: "Anti-virus engineer" },
 ];
-function swap(v1, v2) {
-    return [v2, v1];
+function logPerson(person) {
+    console.log(` - ${person.name}, ${person.age}, ${person.type === "admin" ? person.role : person.occupation}`);
 }
-exports.swap = swap;
-function test1() {
-    console.log("test1:");
-    const [secondUser, firstAdmin] = swap(admins[0], users[1]);
-    logUser(secondUser);
-    logAdmin(firstAdmin);
+exports.logPerson = logPerson;
+function filterPersons(persons, personType, criteria) {
+    return persons
+        .filter((person) => person.type === personType)
+        .filter((person) => {
+        let criteriaKeys = Object.keys(criteria);
+        return criteriaKeys.every((fieldName) => {
+            return person[fieldName] === criteria[fieldName];
+        });
+    });
 }
-function test2() {
-    console.log("test2:");
-    const [secondAdmin, firstUser] = swap(users[0], admins[1]);
-    logAdmin(secondAdmin);
-    logUser(firstUser);
-}
-function test3() {
-    console.log("test3:");
-    const [secondUser, firstUser] = swap(users[0], users[1]);
-    logUser(secondUser);
-    logUser(firstUser);
-}
-function test4() {
-    console.log("test4:");
-    const [firstAdmin, secondAdmin] = swap(admins[1], admins[0]);
-    logAdmin(firstAdmin);
-    logAdmin(secondAdmin);
-}
-function test5() {
-    console.log("test5:");
-    const [stringValue, numericValue] = swap(123, "Hello World");
-    console.log(` - String: ${stringValue}`);
-    console.log(` - Numeric: ${numericValue}`);
-}
-[test1, test2, test3, test4, test5].forEach((test) => test());
+exports.filterPersons = filterPersons;
+exports.usersOfAge23 = filterPersons(exports.persons, "user", {
+    role: "Anti-virus engineer",
+});
+exports.adminsOfAge23 = filterPersons(exports.persons, "admin", {
+    role: "Anti-virus engineer",
+});
+console.log("Users of age 23:");
+exports.usersOfAge23.forEach(logPerson);
+console.log();
+console.log("Admins of age 23:");
+exports.adminsOfAge23.forEach(logPerson);
